@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Главная — Городская Больница{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h2>Добро пожаловать!</h2>
+  <span style="color:var(--clr-text-muted);font-size:var(--fs-sm);">{{ today.strftime('%d.%m.%Y') }}</span>
+</div>
+
+<div class="grid grid-3">
+  <div class="card stat-card">
+    <div class="stat-value">{{ doctors_count }}</div>
+    <div class="stat-label">Врачей в штате</div>
+  </div>
+  <div class="card stat-card">
+    <div class="stat-value">{{ patients_count }}</div>
+    <div class="stat-label">Пациентов зарегистрировано</div>
+  </div>
+  <div class="card stat-card">
+    <div class="stat-value">{{ appointments_today }}</div>
+    <div class="stat-label">Записей на сегодня</div>
+  </div>
+</div>
+
+<div style="margin-top:var(--sp-8);">
+  <h3 style="margin-bottom:var(--sp-4);">Быстрые действия</h3>
+  <div class="grid grid-2">
+    <a href="/schedule" class="card" style="text-decoration:none;color:var(--clr-text);">
+      <div class="doctor-card">
+        <div class="doctor-avatar" style="background:var(--clr-secondary);">📅</div>
+        <div class="doctor-info">
+          <h4>Расписание</h4>
+          <p>Просмотр расписания врачей на неделю</p>
+        </div>
+      </div>
+    </a>
+    <a href="/appointments" class="card" style="text-decoration:none;color:var(--clr-text);">
+      <div class="doctor-card">
+        <div class="doctor-avatar" style="background:var(--clr-accent);">📋</div>
+        <div class="doctor-info">
+          <h4>Записи пациентов</h4>
+          <p>Управление записями на приём</p>
+        </div>
+      </div>
+    </a>
+  </div>
+</div>
+{% endblock %}

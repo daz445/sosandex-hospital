@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Админ-панель — Городская Больница{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h2>⚙️ Админ-панель</h2>
+</div>
+
+<div class="grid grid-3">
+  <div class="card stat-card">
+    <div class="stat-value">{{ doctors_count }}</div>
+    <div class="stat-label">Врачей</div>
+  </div>
+  <div class="card stat-card">
+    <div class="stat-value">{{ patients_count }}</div>
+    <div class="stat-label">Пациентов</div>
+  </div>
+  <div class="card stat-card">
+    <div class="stat-value">{{ booked_count }}</div>
+    <div class="stat-label">Активных записей</div>
+  </div>
+</div>
+
+<div style="margin-top:var(--sp-8);">
+  <h3 style="margin-bottom:var(--sp-4);">Управление</h3>
+  <div class="grid grid-3">
+    <a href="/doctors" class="card" style="text-decoration:none;color:var(--clr-text);">
+      <div class="doctor-card">
+        <div class="doctor-avatar">👨‍⚕️</div>
+        <div class="doctor-info">
+          <h4>Врачи</h4>
+          <p>{{ doctors_count }} записей</p>
+        </div>
+      </div>
+    </a>
+    <a href="/patients" class="card" style="text-decoration:none;color:var(--clr-text);">
+      <div class="doctor-card">
+        <div class="doctor-avatar" style="background:var(--clr-secondary);">🧑‍🤝‍🧑</div>
+        <div class="doctor-info">
+          <h4>Пациенты</h4>
+          <p>{{ patients_count }} записей</p>
+        </div>
+      </div>
+    </a>
+    <a href="/appointments" class="card" style="text-decoration:none;color:var(--clr-text);">
+      <div class="doctor-card">
+        <div class="doctor-avatar" style="background:var(--clr-accent);">📋</div>
+        <div class="doctor-info">
+          <h4>Записи</h4>
+          <p>{{ appointments_count }} всего</p>
+        </div>
+      </div>
+    </a>
+  </div>
+</div>
+{% endblock %}

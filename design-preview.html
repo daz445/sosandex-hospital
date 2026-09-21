@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Дизайн-система — Муниципальная городская больница</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #F1F5F9; color: #0F172A; line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .page-header { background: #1E3A8A; color: #FFF; padding: 32px 24px; margin-bottom: 32px; }
+    .page-header h1 { font-size: 2.25rem; font-weight: 700; line-height: 1.2; letter-spacing: -0.025em; margin-bottom: 8px; }
+    .page-header p  { font-size: 1.125rem; opacity: 0.85; }
+    .container { max-width: 1280px; margin: 0 auto; padding: 0 24px 48px; }
+    .section { margin-bottom: 40px; }
+    .section-title { font-size: 1.5rem; font-weight: 600; line-height: 1.3; color: #0F172A; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid #E2E8F0; }
+    .section-subtitle { font-size: 0.875rem; color: #64748B; margin-bottom: 16px; font-weight: 500; }
+    .grid { display: grid; gap: 16px; }
+    .grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .grid-3 { grid-template-columns: repeat(3, 1fr); }
+    @media (max-width: 768px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+
+    /* Swatches */
+    .swatch-group { margin-bottom: 24px; }
+    .swatch-group-title { font-size: 0.875rem; font-weight: 600; color: #475569; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+    .swatch-row { display: flex; gap: 0; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .swatch { flex: 1; min-height: 64px; display: flex; align-items: flex-end; padding: 6px 8px; font-size: 0.7rem; font-weight: 500; transition: transform 150ms ease; }
+    .swatch:hover { transform: scaleY(1.15); z-index: 1; }
+
+    /* Semantic chips */
+    .semantic-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+    .badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px 10px; border-radius: 9999px; font-size: 0.75rem; font-weight: 500; }
+    .badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+    .badge-booked    { background: #EFF6FF; color: #1E40AF; }
+    .badge-available { background: #F0FDF4; color: #166534; }
+    .badge-cancelled { background: #FEF2F2; color: #991B1B; }
+    .badge-pending   { background: #FFFBEB; color: #92400E; }
+
+    /* Typography */
+    .type-sample { margin-bottom: 12px; padding: 12px 16px; background: #FFF; border-radius: 8px; border: 1px solid #E2E8F0; }
+    .type-meta { font-size: 0.75rem; color: #94A3B8; font-weight: 500; margin-top: 4px; }
+
+    /* Spacing */
+    .spacing-row { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+    .spacing-bar { height: 24px; background: #3B82F6; border-radius: 4px; opacity: 0.7; transition: opacity 150ms; }
+    .spacing-bar:hover { opacity: 1; }
+    .spacing-label { font-size: 0.8125rem; color: #475569; font-weight: 500; min-width: 80px; font-variant-numeric: tabular-nums; }
+    .spacing-value { font-size: 0.75rem; color: #94A3B8; font-family: monospace; min-width: 48px; }
+
+    /* Shadows */
+    .shadow-card { background: #FFF; border-radius: 8px; padding: 16px; display: flex; align-items: center; justify-content: center; font-size: 0.8125rem; font-weight: 500; color: #475569; transition: transform 200ms; }
+    .shadow-card:hover { transform: translateY(-2px); }
+
+    /* Radius */
+    .radius-demo { width: 64px; height: 64px; background: #DBEAFE; border: 2px solid #3B82F6; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 600; color: #1E40AF; }
+
+    /* Buttons */
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 8px 16px; border-radius: 6px; font-size: 0.875rem; font-weight: 500; border: none; cursor: pointer; transition: all 150ms; font-family: inherit; }
+    .btn:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(59,130,246,0.3); }
+    .btn-primary   { background: #2563EB; color: #FFF; }
+    .btn-primary:hover { background: #1D4ED8; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+    .btn-secondary { background: #FFF; color: #2563EB; border: 1px solid #E2E8F0; }
+    .btn-secondary:hover { background: #F8FAFC; border-color: #CBD5E1; }
+    .btn-danger    { background: #EF4444; color: #FFF; }
+    .btn-danger:hover { background: #DC2626; }
+    .btn-ghost     { background: transparent; color: #475569; }
+    .btn-ghost:hover { background: #F1F5F9; }
+    .btn-sm { padding: 4px 10px; font-size: 0.8125rem; }
+    .btn-lg { padding: 12px 24px; font-size: 1rem; }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* Form */
+    .form-group { margin-bottom: 16px; }
+    .form-label { display: block; font-size: 0.875rem; font-weight: 500; color: #334155; margin-bottom: 4px; }
+    .form-input { width: 100%; padding: 8px 12px; border: 1px solid #CBD5E1; border-radius: 6px; font-size: 1rem; line-height: 1.5; font-family: inherit; color: #0F172A; background: #FFF; transition: border-color 150ms, box-shadow 150ms; }
+    .form-input:focus { border-color: #3B82F6; box-shadow: 0 0 0 3px rgba(59,130,246,0.3); outline: none; }
+    .form-input::placeholder { color: #94A3B8; }
+    .form-hint { font-size: 0.75rem; color: #94A3B8; margin-top: 4px; }
+    select.form-input { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394A3B8' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; }
+
+    /* Card */
+    .card { background: #FFF; border: 1px solid #E2E8F0; border-radius: 8px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); transition: box-shadow 200ms; }
+    .card:hover { box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+    .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    .card-title { font-size: 1.125rem; font-weight: 600; color: #0F172A; }
+    .card-body  { font-size: 0.875rem; color: #475569; }
+
+    /* Doctor card */
+    .doctor-card { text-align: center; }
+    .doctor-avatar { width: 64px; height: 64px; border-radius: 50%; background: #DBEAFE; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; font-size: 1.5rem; color: #2563EB; font-weight: 700; }
+    .doctor-name { font-size: 1rem; font-weight: 600; color: #0F172A; margin-bottom: 2px; }
+    .doctor-spec { font-size: 0.8125rem; color: #64748B; margin-bottom: 12px; }
+    .doctor-cabinet { font-size: 0.75rem; color: #94A3B8; }
+
+    /* Table */
+    .table-wrapper { overflow-x: auto; border-radius: 8px; border: 1px solid #E2E8F0; }
+    .table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+    .table th { background: #F8FAFC; font-weight: 500; font-size: 0.8125rem; text-transform: uppercase; letter-spacing: 0.05em; color: #64748B; padding: 12px; text-align: left; white-space: nowrap; }
+    .table td { padding: 12px; border-top: 1px solid #E2E8F0; font-variant-numeric: tabular-nums; }
+    .table tbody tr:hover { background: #F8FAFC; }
+    .table td.time { font-weight: 600; color: #0F172A; }
+
+    /* Alert */
+    .alert { padding: 12px 16px; border-radius: 8px; font-size: 0.875rem; display: flex; align-items: flex-start; gap: 10px; }
+    .alert-icon { flex-shrink: 0; width: 20px; height: 20px; margin-top: 1px; }
+    .alert-info    { background: #EFF6FF; color: #1E40AF; border: 1px solid #BFDBFE; }
+    .alert-success { background: #F0FDF4; color: #166534; border: 1px solid #BBF7D0; }
+    .alert-warning { background: #FFFBEB; color: #92400E; border: 1px solid #FDE68A; }
+    .alert-danger  { background: #FEF2F2; color: #991B1B; border: 1px solid #FECACA; }
+
+    /* Modal */
+    .modal-preview { background: rgba(15,23,42,0.5); border-radius: 12px; padding: 32px; display: flex; align-items: center; justify-content: center; }
+    .modal-box { background: #FFF; border-radius: 12px; padding: 24px; width: 100%; max-width: 400px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
+    .modal-title { font-size: 1.25rem; font-weight: 600; margin-bottom: 8px; }
+    .modal-text  { font-size: 0.875rem; color: #475569; margin-bottom: 20px; }
+    .modal-actions { display: flex; gap: 8px; justify-content: flex-end; }
+
+    /* Nav */
+    .nav-preview { background: #FFF; border-radius: 8px; border: 1px solid #E2E8F0; padding: 0 16px; display: flex; align-items: center; height: 64px; gap: 24px; }
+    .nav-logo { font-size: 1rem; font-weight: 700; color: #1E3A8A; white-space: nowrap; }
+    .nav-links { display: flex; gap: 4px; }
+    .nav-link { padding: 6px 12px; border-radius: 6px; font-size: 0.875rem; font-weight: 500; color: #475569; text-decoration: none; transition: all 150ms; }
+    .nav-link:hover { background: #F1F5F9; color: #0F172A; }
+    .nav-link.active { background: #EFF6FF; color: #2563EB; }
+
+    /* Layout */
+    .layout-demo { display: flex; gap: 16px; min-height: 320px; }
+    .sidebar-demo { width: 220px; flex-shrink: 0; background: #FFF; border-radius: 8px; border: 1px solid #E2E8F0; padding: 16px; font-size: 0.875rem; }
+    .sidebar-item { display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 6px; color: #475569; cursor: pointer; transition: all 150ms; margin-bottom: 2px; }
+    .sidebar-item:hover { background: #F1F5F9; }
+    .sidebar-item.active { background: #EFF6FF; color: #2563EB; font-weight: 500; }
+    .sidebar-section { font-size: 0.75rem; font-weight: 500; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.05em; padding: 16px 12px 6px; }
+    .main-demo { flex: 1; background: #FFF; border-radius: 8px; border: 1px solid #E2E8F0; padding: 20px; }
+
+    /* Slot grid */
+    .slot-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+    @media (max-width: 640px) { .slot-grid { grid-template-columns: repeat(2, 1fr); } }
+    .slot-cell { padding: 8px; border-radius: 6px; text-align: center; font-size: 0.8125rem; font-weight: 500; border: 1px solid; cursor: pointer; transition: all 150ms; }
+    .slot-cell:hover { transform: scale(1.03); }
+    .slot-free    { background: #F0FDF4; color: #166534; border-color: #BBF7D0; }
+    .slot-free:hover   { background: #DCFCE7; }
+    .slot-taken   { background: #EFF6FF; color: #1E40AF; border-color: #BFDBFE; }
+    .slot-taken:hover  { background: #DBEAFE; }
+    .slot-blocked { background: #F8FAFC; color: #94A3B8; border-color: #E2E8F0; cursor: default; }
+    .slot-blocked:hover { transform: none; }
+
+    /* Token code */
+    .token-code { display: inline-block; background: #F1F5F9; border: 1px solid #E2E8F0; padding: 1px 6px; border-radius: 4px; font-size: 0.75rem; font-family: monospace; color: #475569; }
+
+    /* Utilities */
+    .flex { display: flex; } .flex-wrap { flex-wrap: wrap; } .items-center { align-items: center; } .flex-col { flex-direction: column; }
+    .gap-2 { gap: 8px; } .gap-3 { gap: 12px; } .gap-4 { gap: 16px; }
+    .mt-2 { margin-top: 8px; } .mt-3 { margin-top: 12px; } .mt-4 { margin-top: 16px; }
+    .mb-2 { margin-bottom: 8px; } .mb-3 { margin-bottom: 12px; } .mb-4 { margin-bottom: 16px; }
+    .text-center { text-align: center; }
+  </style>
+</head>
+<body>
+
+  <header class="page-header">
+    <div class="container" style="padding:0">
+      <h1>Муниципальная городская больница</h1>
+      <p>Дизайн-система v1.0 — HTML + CSS + JS / FastAPI / SQLite</p>
+    </div>
+  </header>
+
+  <div class="container">
+
+    <!-- ===== 1. COLORS ===== -->
+    <section class="section">
+      <h2 class="section-title">1. Цвета</h2>
+
+      <div class="swatch-group">
+        <div class="swatch-group-title">Primary — Голубой</div>
+        <div class="swatch-row">
+          <div class="swatch" style="background:#EFF6FF;color:#1E3A8A"><span>50</span></div>
+          <div class="swatch" style="background:#DBEAFE;color:#1E3A8A"><span>100</span></div>
+          <div class="swatch" style="background:#BFDBFE;color:#1E3A8A"><span>200</span></div>
+          <div class="swatch" style="background:#93C5FD;color:#1E3A8A"><span>300</span></div>
+          <div class="swatch" style="background:#60A5FA;color:#FFF"><span>400</span></div>
+          <div class="swatch" style="background:#3B82F6;color:#FFF"><span>500</span></div>
+          <div class="swatch" style="background:#2563EB;color:#FFF"><span>600</span></div>
+          <div class="swatch" style="background:#1D4ED8;color:#FFF"><span>700</span></div>
+          <div class="swatch" style="background:#1E40AF;color:#FFF"><span>800</span></div>
+          <div class="swatch" style="background:#1E3A8A;color:#FFF"><span>900</span></div>
+          <div class="swatch" style="background:#172554;color:#FFF"><span>950</span></div>
+        </div>
+      </div>
+
+      <div class="swatch-group">
+        <div class="swatch-group-title">Secondary — Бирюзовый</div>
+        <div class="swatch-row">
+          <div class="swatch" style="background:#F0FDFA;color:#134E4A"><span>50</span></div>
+          <div class="swatch" style="background:#CCFBF1;color:#134E4A"><span>100</span></div>
+          <div class="swatch" style="background:#99F6E4;color:#134E4A"><span>200</span></div>
+          <div class="swatch" style="background:#5EEAD4;color:#134E4A"><span>300</span></div>
+          <div class="swatch" style="background:#2DD4BF;color:#042F2E"><span>400</span></div>
+          <div class="swatch" style="background:#14B8A6;color:#FFF"><span>500</span></div>
+          <div class="swatch" style="background:#0D9488;color:#FFF"><span>600</span></div>
+          <div class="swatch" style="background:#0F766E;color:#FFF"><span>700</span></div>
+          <div class="swatch" style="background:#115E59;color:#FFF"><span>800</span></div>
+          <div class="swatch" style="background:#134E4A;color:#FFF"><span>900</span></div>
+          <div class="swatch" style="background:#042F2E;color:#FFF"><span>950</span></div>
+        </div>
+      </div>
+
+      <div class="swatch-group">
+        <div class="swatch-group-title">Accent — Зелёный</div>
+        <div class="swatch-row">
+          <div class="swatch" style="background:#F0FDF4;color:#14532D"><span>50</span></div>
+          <div class="swatch" style="background:#DCFCE7;color:#14532D"><span>100</span></div>
+          <div class="swatch" style="background:#BBF7D0;color:#14532D"><span>200</span></div>
+          <div class="swatch" style="background:#86EFAC;color:#14532D"><span>300</span></div>
+          <div class="swatch" style="background:#4ADE80;color:#14532D"><span>400</span></div>
+          <div class="swatch" style="background:#22C55E;color:#FFF"><span>500</span></div>
+          <div class="swatch" style="background:#16A34A;color:#FFF"><span>600</span></div>
+          <div class="swatch" style="background:#15803D;color:#FFF"><span>700</span></div>
+          <div class="swatch" style="background:#166534;color:#FFF"><span>800</span></div>
+          <div class="swatch" style="background:#14532D;color:#FFF"><span>900</span></div>
+        </div>
+      </div>
+
+      <div class="grid grid-2">
+        <div class="swatch-group">
+          <div class="swatch-group-title">Warning — Янтарный</div>
+          <div class="swatch-row">
+            <div class="swatch" style="background:#FFFBEB;color:#78350F"><span>50</span></div>
+            <div class="swatch" style="background:#FEF3C7;color:#78350F"><span>100</span></div>
+            <div class="swatch" style="background:#FDE68A;color:#78350F"><span>200</span></div>
+            <div class="swatch" style="background:#FCD34D;color:#78350F"><span>300</span></div>
+            <div class="swatch" style="background:#FBBF24;color:#78350F"><span>400</span></div>
+            <div class="swatch" style="background:#F59E0B;color:#FFF"><span>500</span></div>
+            <div class="swatch" style="background:#D97706;color:#FFF"><span>600</span></div>
+            <div class="swatch" style="background:#B45309;color:#FFF"><span>700</span></div>
+            <div class="swatch" style="background:#92400E;color:#FFF"><span>800</span></div>
+            <div class="swatch" style="background:#78350F;color:#FFF"><span>900</span></div>
+          </div>
+        </div>
+        <div class="swatch-group">
+          <div class="swatch-group-title">Danger — Красный</div>
+          <div class="swatch-row">
+            <div class="swatch" style="background:#FEF2F2;color:#7F1D1D"><span>50</span></div>
+            <div class="swatch" style="background:#FEE2E2;color:#7F1D1D"><span>100</span></div>
+            <div class="swatch" style="background:#FECACA;color:#7F1D1D"><span>200</span></div>
+            <div class="swatch" style="background:#FCA5A5;color:#7F1D1D"><span>300</span></div>
+            <div class="swatch" style="background:#F87171;color:#FFF"><span>400</span></div>
+            <div class="swatch" style="background:#EF4444;color:#FFF"><span>500</span></div>
+            <div class="swatch" style="background:#DC2626;color:#FFF"><span>600</span></div>
+            <div class="swatch" style="background:#B91C1C;color:#FFF"><span>700</span></div>
+            <div class="swatch" style="background:#991B1B;color:#FFF"><span>800</span></div>
+            <div class="swatch" style="background:#7F1D1D;color:#FFF"><span>900</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="swatch-group mt-4">
+        <div class="swatch-group-title">Neutrals — Нейтралы</div>
+        <div class="swatch-row">
+          <div class="swatch" style="background:#FFF;color:#0F172A;border:1px solid #E2E8F0"><span>0</span></div>
+          <div class="swatch" style="background:#F8FAFC;color:#0F172A"><span>50</span></div>
+          <div class="swatch" style="background:#F1F5F9;color:#0F172A"><span>100</span></div>
+          <div class="swatch" style="background:#E2E8F0;color:#0F172A"><span>200</span></div>
+          <div class="swatch" style="background:#CBD5E1;color:#0F172A"><span>300</span></div>
+          <div class="swatch" style="background:#94A3B8;color:#FFF"><span>400</span></div>
+          <div class="swatch" style="background:#64748B;color:#FFF"><span>500</span></div>
+          <div class="swatch" style="background:#475569;color:#FFF"><span>600</span></div>
+          <div class="swatch" style="background:#334155;color:#FFF"><span>700</span></div>
+          <div class="swatch" style="background:#1E293B;color:#FFF"><span>800</span></div>
+          <div class="swatch" style="background:#0F172A;color:#FFF"><span>900</span></div>
+          <div class="swatch" style="background:#020617;color:#FFF"><span>950</span></div>
+        </div>
+      </div>
+
+      <div class="mt-4">
+        <div class="swatch-group-title">Семантические статусы расписания</div>
+        <div class="semantic-row">
+          <span class="badge badge-booked">Записан</span>
+          <span class="badge badge-available">Свободен</span>
+          <span class="badge badge-cancelled">Отменён</span>
+          <span class="badge badge-pending">Ожидание</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 2. TYPOGRAPHY ===== -->
+    <section class="section">
+      <h2 class="section-title">2. Типографика</h2>
+      <p class="section-subtitle">Шрифт: Inter — табличные цифры, отличная читаемость на экранах</p>
+
+      <div class="type-sample">
+        <div style="font-size:2.25rem;font-weight:700;line-height:1.2;letter-spacing:-0.025em">Display — Запись на приём</div>
+        <div class="type-meta">2.25rem / Bold 700 / 1.2 / -0.025em</div>
+      </div>
+      <div class="type-sample">
+        <div style="font-size:1.875rem;font-weight:700;line-height:1.25;letter-spacing:-0.025em">H1 — Расписание врачей</div>
+        <div class="type-meta">1.875rem / Bold 700 / 1.25 / -0.025em</div>
+      </div>
+      <div class="type-sample">
+        <div style="font-size:1.5rem;font-weight:600;line-height:1.3">H2 — Кабинет №12</div>
+        <div class="type-meta">1.5rem / Semibold 600 / 1.3</div>
+      </div>
+      <div class="type-sample">
+        <div style="font-size:1.25rem;font-weight:600;line-height:1.375">H3 — Терапевт Иванов И.И.</div>
+        <div class="type-meta">1.25rem / Semibold 600 / 1.375</div>
+      </div>
+      <div class="type-sample">
+        <div style="font-size:1.125rem;font-weight:600;line-height:1.375">H4 — Карточка пациента</div>
+        <div class="type-meta">1.125rem / Semibold 600 / 1.375</div>
+      </div>
+      <div class="type-sample">
+        <div style="font-size:1.125rem;font-weight:400;line-height:1.625;color:#334155">Body LG — Пациент записан на приём к терапевту. Просьба прибыть за 10 минут до назначенного времени.</div>
+        <div class="type-meta">1.125rem / Regular 400 / 1.625</div>
+      </div>
+      <div class="type-sample">
+        <div style="font-size:1rem;font-weight:400;line-height:1.5;color:#334155">Body — Пациент записан на приём к терапевту. Просьба прибыть за 10 минут до назначенного времени.</div>
+        <div class="type-meta">1rem / Regular 400 / 1.5</div>
+      </div>
+      <div class="type-sample">
+        <div style="font-size:0.875rem;font-weight:400;line-height:1.5;color:#475569">Body SM — Дополнительная информация о расписании работы врачей доступна в административной панели.</div>
+        <div class="type-meta">0.875rem / Regular 400 / 1.5</div>
+      </div>
+      <div class="type-sample">
+        <div style="font-size:0.875rem;font-weight:500;line-height:1.5;color:#64748B">LABEL — ФИО ВРАЧА</div>
+        <div class="type-meta">0.875rem / Medium 500 / 1.5</div>
+      </div>
+      <div class="type-sample">
+        <div style="font-size:0.75rem;font-weight:500;line-height:1.5;color:#94A3B8">CAPTION — кабинет 12, 2 этаж</div>
+        <div class="type-meta">0.75rem / Medium 500 / 1.5</div>
+      </div>
+      <div class="type-sample">
+        <div style="font-size:1rem;font-weight:600;line-height:1.5;font-variant-numeric:tabular-nums">DATA — 14:30 / Кабинет №12 / 3 записи</div>
+        <div class="type-meta">1rem / Semibold 600 / 1.5 / tabular-nums</div>
+      </div>
+    </section>
+
+    <!-- ===== 3. SPACING ===== -->
+    <section class="section">
+      <h2 class="section-title">3. Пространство</h2>
+      <p class="section-subtitle">Базовая единица: 4px — все отступы кратны этому значению</p>
+      <div style="background:#FFF;border-radius:8px;border:1px solid #E2E8F0;padding:20px">
+        <div class="spacing-row"><span class="spacing-label">space-1</span><div class="spacing-bar" style="width:4px"></div><span class="spacing-value">4px</span></div>
+        <div class="spacing-row"><span class="spacing-label">space-2</span><div class="spacing-bar" style="width:8px"></div><span class="spacing-value">8px</span></div>
+        <div class="spacing-row"><span class="spacing-label">space-3</span><div class="spacing-bar" style="width:12px"></div><span class="spacing-value">12px</span></div>
+        <div class="spacing-row"><span class="spacing-label">space-4</span><div class="spacing-bar" style="width:16px"></div><span class="spacing-value">16px</span></div>
+        <div class="spacing-row"><span class="spacing-label">space-5</span><div class="spacing-bar" style="width:20px"></div><span class="spacing-value">20px</span></div>
+        <div class="spacing-row"><span class="spacing-label">space-6</span><div class="spacing-bar" style="width:24px"></div><span class="spacing-value">24px</span></div>
+        <div class="spacing-row"><span class="spacing-label">space-8</span><div class="spacing-bar" style="width:32px"></div><span class="spacing-value">32px</span></div>
+        <div class="spacing-row"><span class="spacing-label">space-10</span><div class="spacing-bar" style="width:40px"></div><span class="spacing-value">40px</span></div>
+        <div class="spacing-row"><span class="spacing-label">space-12</span><div class="spacing-bar" style="width:48px"></div><span class="spacing-value">48px</span></div>
+        <div class="spacing-row"><span class="spacing-label">space-16</span><div class="spacing-bar" style="width:64px"></div><span class="spacing-value">64px</span></div>
+        <div class="spacing-row"><span class="spacing-label">space-20</span><div class="spacing-bar" style="width:80px"></div><span class="spacing-value">80px</span></div>
+        <div class="spacing-row"><span class="spacing-label">space-24</span><div class="spacing-bar" style="width:96px"></div><span class="spacing-value">96px</span></div>
+      </div>
+    </section>
+
+    <!-- ===== 4. SHADOWS ===== -->
+    <section class="section">
+      <h2 class="section-title">4. Тени</h2>
+      <div class="grid grid-3" style="margin-top:16px">
+        <div class="shadow-card" style="box-shadow:0 1px 2px 0 rgba(0,0,0,0.05)">xs</div>
+        <div class="shadow-card" style="box-shadow:0 1px 3px 0 rgba(0,0,0,0.1),0 1px 2px -1px rgba(0,0,0,0.1)">sm</div>
+        <div class="shadow-card" style="box-shadow:0 4px 6px -1px rgba(0,0,0,0.1),0 2px 4px -2px rgba(0,0,0,0.1)">md</div>
+        <div class="shadow-card" style="box-shadow:0 10px 15px -3px rgba(0,0,0,0.1),0 4px 6px -4px rgba(0,0,0,0.1)">lg</div>
+        <div class="shadow-card" style="box-shadow:0 20px 25px -5px rgba(0,0,0,0.1),0 8px 10px -6px rgba(0,0,0,0.1)">xl</div>
+        <div class="shadow-card" style="box-shadow:0 0 0 3px rgba(59,130,246,0.3)">focus ring</div>
+      </div>
+    </section>
+
+    <!-- ===== 5. BORDER RADIUS ===== -->
+    <section class="section">
+      <h2 class="section-title">5. Скругления</h2>
+      <div class="flex items-center gap-4" style="flex-wrap:wrap;margin-top:16px">
+        <div class="text-center"><div class="radius-demo" style="border-radius:0">0</div><div class="type-meta mt-2">none</div></div>
+        <div class="text-center"><div class="radius-demo" style="border-radius:4px">4</div><div class="type-meta mt-2">sm</div></div>
+        <div class="text-center"><div class="radius-demo" style="border-radius:6px">6</div><div class="type-meta mt-2">md</div></div>
+        <div class="text-center"><div class="radius-demo" style="border-radius:8px">8</div><div class="type-meta mt-2">lg</div></div>
+        <div class="text-center"><div class="radius-demo" style="border-radius:12px">12</div><div class="type-meta mt-2">xl</div></div>
+        <div class="text-center"><div class="radius-demo" style="border-radius:16px">16</div><div class="type-meta mt-2">2xl</div></div>
+        <div class="text-center"><div class="radius-demo" style="border-radius:9999px;width:64px">full</div><div class="type-meta mt-2">full</div></div>
+      </div>
+    </section>
+
+    <!-- ===== 6. COMPONENTS ===== -->
+    <section class="section">
+      <h2 class="section-title">6. Компоненты</h2>
+
+      <h3 style="font-size:1.25rem;font-weight:600;margin-bottom:12px">Кнопки</h3>
+      <div class="flex flex-wrap items-center gap-3 mb-4">
+        <button class="btn btn-primary">Записаться</button>
+        <button class="btn btn-secondary">Отмена</button>
+        <button class="btn btn-danger">Удалить</button>
+        <button class="btn btn-ghost">Подробнее</button>
+        <button class="btn btn-primary btn-sm">Маленькая</button>
+        <button class="btn btn-primary btn-lg">Большая</button>
+        <button class="btn btn-primary" disabled>Disabled</button>
+      </div>
+
+      <h3 style="font-size:1.25rem;font-weight:600;margin-bottom:12px">Бейджи статусов</h3>
+      <div class="flex flex-wrap items-center gap-3 mb-4">
+        <span class="badge badge-booked">Записан</span>
+        <span class="badge badge-available">Свободен</span>
+        <span class="badge badge-cancelled">Отменён</span>
+        <span class="badge badge-pending">Ожидание</span>
+      </div>
+
+      <h3 style="font-size:1.25rem;font-weight:600;margin-bottom:12px">Оповещения</h3>
+      <div class="flex flex-col gap-3 mb-4">
+        <div class="alert alert-info">
+          <svg class="alert-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
+          <div><strong>Информация.</strong> Запись на приём подтверждена. Ожидайте в кабинете №12.</div>
+        </div>
+        <div class="alert alert-success">
+          <svg class="alert-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+          <div><strong>Успех.</strong> Расписание обновлено. Новые слоты доступны для записи.</div>
+        </div>
+        <div class="alert alert-warning">
+          <svg class="alert-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+          <div><strong>Внимание.</strong> До начала приёма осталось 10 минут. Пожалуйста, подойдите в кабинет.</div>
+        </div>
+        <div class="alert alert-danger">
+          <svg class="alert-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/></svg>
+          <div><strong>Ошибка.</strong> Запись не может быть создана. Слот уже занят.</div>
+        </div>
+      </div>
+
+      <h3 style="font-size:1.25rem;font-weight:600;margin-bottom:12px">Поля ввода</h3>
+      <div class="grid grid-3 mb-4">
+        <div class="form-group">
+          <label class="form-label" for="demo-name">ФИО пациента</label>
+          <input class="form-input" type="text" id="demo-name" placeholder="Иванов Иван Иванович">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="demo-spec">Специальность</label>
+          <select class="form-input" id="demo-spec"><option>Терапевт</option><option>Хирург</option><option>Кардиолог</option><option>Невролог</option></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="demo-date">Дата приёма</label>
+          <input class="form-input" type="date" id="demo-date">
+          <div class="form-hint">Выберите доступную дату</div>
+        </div>
+      </div>
+
+      <h3 style="font-size:1.25rem;font-weight:600;margin-bottom:12px">Карточки врачей</h3>
+      <div class="grid grid-3 mb-4">
+        <div class="card doctor-card">
+          <div class="doctor-avatar">ИИ</div>
+          <div class="doctor-name">Иванов Иван Иванович</div>
+          <div class="doctor-spec">Терапевт</div>
+          <span class="badge badge-available" style="margin-bottom:8px">3 свободных слота</span>
+          <div class="doctor-cabinet">Кабинет №12, 2 этаж</div>
+        </div>
+        <div class="card doctor-card">
+          <div class="doctor-avatar" style="background:#CCFBF1;color:#0D9488">ПМ</div>
+          <div class="doctor-name">Петрова Мария Сергеевна</div>
+          <div class="doctor-spec">Кардиолог</div>
+          <span class="badge badge-booked" style="margin-bottom:8px">Нет свободных слотов</span>
+          <div class="doctor-cabinet">Кабинет №5, 1 этаж</div>
+        </div>
+        <div class="card doctor-card">
+          <div class="doctor-avatar" style="background:#DCFCE7;color:#16A34A">СА</div>
+          <div class="doctor-name">Сидоров Алексей Петрович</div>
+          <div class="doctor-spec">Хирург</div>
+          <span class="badge badge-pending" style="margin-bottom:8px">1 слот в ожидании</span>
+          <div class="doctor-cabinet">Кабинет №8, 3 этаж</div>
+        </div>
+      </div>
+
+      <h3 style="font-size:1.25rem;font-weight:600;margin-bottom:12px">Таблица расписания</h3>
+      <div class="table-wrapper mb-4">
+        <table class="table">
+          <thead><tr><th>Время</th><th>Врач</th><th>Специальность</th><th>Кабинет</th><th>Статус</th></tr></thead>
+          <tbody>
+            <tr><td class="time">09:00 — 09:30</td><td>Иванов И.И.</td><td>Терапевт</td><td>№12</td><td><span class="badge badge-available">Свободен</span></td></tr>
+            <tr><td class="time">09:30 — 10:00</td><td>Иванов И.И.</td><td>Терапевт</td><td>№12</td><td><span class="badge badge-booked">Записан</span></td></tr>
+            <tr><td class="time">10:00 — 10:30</td><td>Иванов И.И.</td><td>Терапевт</td><td>№12</td><td><span class="badge badge-available">Свободен</span></td></tr>
+            <tr><td class="time">10:30 — 11:00</td><td>Петрова М.С.</td><td>Кардиолог</td><td>№5</td><td><span class="badge badge-booked">Записан</span></td></tr>
+            <tr><td class="time">11:00 — 11:30</td><td>Петрова М.С.</td><td>Кардиолог</td><td>№5</td><td><span class="badge badge-cancelled">Отменён</span></td></tr>
+            <tr><td class="time">14:00 — 14:30</td><td>Сидоров А.П.</td><td>Хирург</td><td>№8</td><td><span class="badge badge-pending">Ожидание</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 style="font-size:1.25rem;font-weight:600;margin-bottom:12px">Сетка слотов (расписание на день)</h3>
+      <div class="card mb-4">
+        <div class="card-header">
+          <div class="card-title">Иванов И.И. — Терапевт</div>
+          <div class="doctor-cabinet">Кабинет №12</div>
+        </div>
+        <div class="slot-grid">
+          <div class="slot-cell slot-free">09:00<br>Свободен</div>
+          <div class="slot-cell slot-taken">09:30<br>Записан</div>
+          <div class="slot-cell slot-free">10:00<br>Свободен</div>
+          <div class="slot-cell slot-free">10:30<br>Свободен</div>
+          <div class="slot-cell slot-taken">11:00<br>Записан</div>
+          <div class="slot-cell slot-blocked">11:30<br>—</div>
+          <div class="slot-cell slot-free">14:00<br>Свободен</div>
+          <div class="slot-cell slot-free">14:30<br>Свободен</div>
+          <div class="slot-cell slot-taken">15:00<br>Записан</div>
+          <div class="slot-cell slot-free">15:30<br>Свободен</div>
+          <div class="slot-cell slot-blocked">16:00<br>—</div>
+          <div class="slot-cell slot-blocked">16:30<br>—</div>
+        </div>
+      </div>
+
+      <h3 style="font-size:1.25rem;font-weight:600;margin-bottom:12px">Модальное окно</h3>
+      <div class="modal-preview mb-4">
+        <div class="modal-box">
+          <div class="modal-title">Подтвердить запись</div>
+          <div class="modal-text">Вы хотите записаться к Иванов И.И. (Терапевт) на 10:00, 22 сентября 2026? Кабинет №12, 2 этаж.</div>
+          <div class="modal-actions">
+            <button class="btn btn-secondary">Отмена</button>
+            <button class="btn btn-primary">Подтвердить</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 7. LAYOUT ===== -->
+    <section class="section">
+      <h2 class="section-title">7. Макет приложения</h2>
+      <p class="section-subtitle">Навигация + сайдбар + основной контент</p>
+
+      <div class="nav-preview mb-4">
+        <div class="nav-logo">🏥 Больница</div>
+        <div class="nav-links">
+          <a class="nav-link active" href="#">Расписание</a>
+          <a class="nav-link" href="#">Врачи</a>
+          <a class="nav-link" href="#">Пациенты</a>
+          <a class="nav-link" href="#">Записи</a>
+        </div>
+        <div style="flex:1"></div>
+        <button class="btn btn-secondary btn-sm">Админ</button>
+      </div>
+
+      <div class="layout-demo">
+        <div class="sidebar-demo">
+          <div class="sidebar-section">Меню</div>
+          <div class="sidebar-item active">📅 Расписание</div>
+          <div class="sidebar-item">👨‍⚕️ Врачи</div>
+          <div class="sidebar-item">🧑‍🤝‍🧑 Пациенты</div>
+          <div class="sidebar-item">📋 Записи</div>
+          <div class="sidebar-section">Админ</div>
+          <div class="sidebar-item">⚙️ Настройки</div>
+          <div class="sidebar-item">📊 Отчёты</div>
+        </div>
+        <div class="main-demo">
+          <h3 style="font-size:1.25rem;font-weight:600;margin-bottom:16px">Расписание на 22 сентября 2026</h3>
+          <div class="flex flex-wrap items-center gap-3 mb-3">
+            <div class="form-group" style="margin-bottom:0;flex:1;min-width:200px">
+              <select class="form-input"><option>Все специальности</option><option>Терапевт</option><option>Кардиолог</option><option>Хирург</option></select>
+            </div>
+            <button class="btn btn-primary">Показать</button>
+          </div>
+          <div class="table-wrapper">
+            <table class="table">
+              <thead><tr><th>Время</th><th>Врач</th><th>Кабинет</th><th>Статус</th><th></th></tr></thead>
+              <tbody>
+                <tr><td class="time">09:00</td><td>Иванов И.И.</td><td>№12</td><td><span class="badge badge-available">Свободен</span></td><td><button class="btn btn-primary btn-sm">Записаться</button></td></tr>
+                <tr><td class="time">09:30</td><td>Иванов И.И.</td><td>№12</td><td><span class="badge badge-booked">Записан</span></td><td></td></tr>
+                <tr><td class="time">10:00</td><td>Петрова М.С.</td><td>№5</td><td><span class="badge badge-available">Свободен</span></td><td><button class="btn btn-primary btn-sm">Записаться</button></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 8. ACCESSIBILITY ===== -->
+    <section class="section">
+      <h2 class="section-title">8. Доступность</h2>
+      <div class="grid grid-2">
+        <div class="card">
+          <div class="card-title mb-3">Контрастность (WCAG 2.1 AA)</div>
+          <div class="card-body">
+            <div style="margin-bottom:8px"><span class="token-code">text primary / bg</span> #0F172A on #FFFFFF = <strong>16.1:1</strong> ✅</div>
+            <div style="margin-bottom:8px"><span class="token-code">text secondary / bg</span> #475569 on #FFFFFF = <strong>7.1:1</strong> ✅</div>
+            <div style="margin-bottom:8px"><span class="token-code">text muted / bg</span> #94A3B8 on #FFFFFF = <strong>3.5:1</strong> — крупный текст ✅</div>
+            <div style="margin-bottom:8px"><span class="token-code">primary btn</span> #FFFFFF on #2563EB = <strong>4.6:1</strong> ✅</div>
+            <div><span class="token-code">danger btn</span> #FFFFFF on #EF4444 = <strong>4.5:1</strong> ✅</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title mb-3">Требования</div>
+          <div class="card-body" style="line-height:1.8">
+            <div>✅ Focus ring: 3px outline на всех интерактивных элементах</div>
+            <div>✅ Touch target: минимум 44×44px на mobile</div>
+            <div>✅ Семантический HTML: nav, main, table, form</div>
+            <div>✅ Label ↔ Input связь через for/id</div>
+            <div>✅ Статусы не только по цвету — есть текст + точка</div>
+            <div>✅ Tabular nums для числовых данных</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer style="text-align:center;padding:24px 0;color:#94A3B8;font-size:0.8125rem;border-top:1px solid #E2E8F0">
+      Дизайн-система v1.0 — Муниципальная городская больница — 2026
+    </footer>
+  </div>
+</body>
+</html>

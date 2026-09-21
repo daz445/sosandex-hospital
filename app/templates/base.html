@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Городская Больница{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <h1>🏥 Городская<br>Больница</h1>
+        <p>Система управления</p>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="/" class="{% if page == 'index' %}active{% endif %}">📊 Главная</a>
+        <a href="/schedule" class="{% if page == 'schedule' %}active{% endif %}">📅 Расписание</a>
+        <a href="/doctors" class="{% if page == 'doctors' %}active{% endif %}">👨‍⚕️ Врачи</a>
+        <a href="/patients" class="{% if page == 'patients' %}active{% endif %}">🧑‍🤝‍🧑 Пациенты</a>
+        <a href="/appointments" class="{% if page == 'appointments' %}active{% endif %}">📋 Записи</a>
+        <a href="/admin" class="{% if page == 'admin' %}active{% endif %}">⚙️ Админ</a>
+      </nav>
+    </aside>
+    <main class="main">
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+  <script src="/static/js/app.js"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

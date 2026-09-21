@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Расписание — Городская Больница{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h2>📅 Расписание врачей</h2>
+</div>
+
+{% for doctor in doctors %}
+<div class="card" style="margin-bottom:var(--sp-4);">
+  <div class="doctor-card" style="margin-bottom:var(--sp-4);">
+    <div class="doctor-avatar">{{ doctor.initials }}</div>
+    <div class="doctor-info">
+      <h4>{{ doctor.full_name }}</h4>
+      <p>{{ doctor.specialty }} · Каб. {{ doctor.cabinet }}</p>
+    </div>
+  </div>
+  <div class="schedule-grid">
+    {% for name in weekday_names %}
+    <div class="schedule-day header">{{ name }}</div>
+    {% endfor %}
+    {% for day in range(7) %}
+    <div class="schedule-day">
+      {% for slot in doctor.schedule_slots if slot.day_of_week == day %}
+      <div class="schedule-slot">{{ slot.start_time.strftime('%H:%M') }} – {{ slot.end_time.strftime('%H:%M') }}</div>
+      {% endfor %}
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% else %}
+<p style="color:var(--clr-text-muted);">Нет врачей с расписанием.</p>
+{% endfor %}
+{% endblock %}

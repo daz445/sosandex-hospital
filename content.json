@@ -1,0 +1,206 @@
+{
+  "content": {
+    "images": [
+      "screenshots/dashboard.png",
+      "screenshots/schedule.png",
+      "screenshots/doctors.png",
+      "screenshots/patients.png",
+      "screenshots/appointments.png",
+      "screenshots/admin.png"
+    ],
+    "body": [
+      {"type": "heading", "level": 1, "text": "1. Введение"},
+      {"type": "paragraph", "text": "Муниципальная городская больница обслуживает большое количество прикрепленных к ней пациентов. В больнице работают терапевты и узкие специалисты. Каждый врач работает в кабинете, согласно штатному расписанию, а пациенты имеют возможность записаться на приём, если есть свободное время. Возникает необходимость в автоматизации процесса управления расписанием врачей, записями пациентов и ведения базы данных медучреждения."},
+      {"type": "paragraph", "text": "Целью данной курсовой работы является разработка веб-приложения для управления муниципальной городской больницей с использованием современных технологий веб-разработки."},
+
+      {"type": "heading", "level": 1, "text": "2. Задачи работы"},
+      {"type": "list", "list_type": "numbered", "items": [
+        "Проанализировать требования к системе управления больницей",
+        "Спроектировать архитектуру веб-приложения и структуру базы данных",
+        "Реализовать REST API для управления врачами, пациентами и записями",
+        "Разработать пользовательский интерфейс с использованием Jinja2-шаблонов",
+        "Внедрить проверку конфликтов при записи пациентов",
+        "Написать автоматические тесты для проверки корректности работы API",
+        "Оформить документацию и отчёт по результатам работы"
+      ]},
+
+      {"type": "heading", "level": 1, "text": "3. Выбор технологий и обоснование"},
+      {"type": "paragraph", "text": "Для разработки серверной части приложения выбран фреймворк FastAPI — асинхронный Python-фреймворк, обеспечивающий высокую производительность и автоматическую генерацию OpenAPI-спецификации. FastAPI позволяет реализовать типизированные эндпоинты с валидацией данных на основе Pydantic v2."},
+      {"type": "paragraph", "text": "В качестве ORM используется SQLAlchemy 2.0 с асинхронной поддержкой (async/await), что обеспечивает неблокирующие запросы к базе данных. Для хранения данных применяется SQLite в связке с aiosqlite — это позволяет обойтись без установки отдельного СУБД-сервера при сохранении полной функциональности."},
+      {"type": "paragraph", "text": "Frontend реализован с использованием серверного рендеринга Jinja2, что упрощает архитектуру приложения и обеспечивает быструю загрузку страниц. Стилизация выполнена на CSS с использованием кастомных свойств (CSS Custom Properties), дизайн-система построена на 4px сетке с медицинской цветовой палитрой."},
+
+      {"type": "heading", "level": 1, "text": "4. Архитектура приложения"},
+      {"type": "paragraph", "text": "Приложение построено по архитектуре клиент-сервер с разделением на логические слои:"},
+      {"type": "table", "content": [
+        [
+          {"elements": [{"type": "text", "text": "Компонент", "bold": true}]},
+          {"elements": [{"type": "text", "text": "Описание", "bold": true}]},
+          {"elements": [{"type": "text", "text": "Технология", "bold": true}]}
+        ],
+        ["Бэкенд (API)", "REST API для CRUD-операций", "FastAPI 0.115"],
+        ["ORM-слой", "Маппинг объектов на БД", "SQLAlchemy 2.0"],
+        ["База данных", "Хранение данных", "SQLite + aiosqlite"],
+        ["Шаблонизатор", "Серверный рендеринг страниц", "Jinja2"],
+        ["Frontend", "Интерфейс пользователя", "HTML/CSS/JS"],
+        ["Тестирование", "Автоматические тесты API", "pytest + httpx"]
+      ]},
+      {"type": "paragraph", "text": "Структура проекта:"},
+      {"type": "code", "text": "app/\n├── __init__.py\n├── main.py              # Точка входа FastAPI\n├── database.py          # Настройка подключения к БД\n├── models/\n│   ├── database_models.py   # ORM-модели\n│   └── schemas.py           # Pydantic-схемы\n├── routers/\n│   ├── doctors.py           # API врачей\n│   ├── patients.py          # API пациентов\n│   ├── appointments.py      # API записей\n│   └── pages.py             # Страницы (SSR)\n├── templates/               # Jinja2-шаблоны\n└── static/                  # CSS, JS"},
+
+      {"type": "heading", "level": 1, "text": "5. Структура базы данных"},
+      {"type": "paragraph", "text": "База данных содержит четыре основные таблицы:"},
+      {"type": "heading", "level": 2, "text": "5.1. Таблица Doctor (Врач)"},
+      {"type": "table", "content": [
+        [
+          {"elements": [{"type": "text", "text": "Поле", "bold": true}]},
+          {"elements": [{"type": "text", "text": "Тип", "bold": true}]},
+          {"elements": [{"type": "text", "text": "Описание", "bold": true}]}
+        ],
+        ["id", "INTEGER PK", "Идентификатор врача"],
+        ["first_name", "VARCHAR", "Имя"],
+        ["last_name", "VARCHAR", "Фамилия"],
+        ["patronymic", "VARCHAR", "Отчество"],
+        ["specialty", "VARCHAR", "Специальность"],
+        ["cabinet", "VARCHAR", "Номер кабинета"],
+        ["phone", "VARCHAR", "Телефон"],
+        ["email", "VARCHAR", "Email"]
+      ]},
+      {"type": "heading", "level": 2, "text": "5.2. Таблица Patient (Пациент)"},
+      {"type": "table", "content": [
+        [
+          {"elements": [{"type": "text", "text": "Поле", "bold": true}]},
+          {"elements": [{"type": "text", "text": "Тип", "bold": true}]},
+          {"elements": [{"type": "text", "text": "Описание", "bold": true}]}
+        ],
+        ["id", "INTEGER PK", "Идентификатор пациента"],
+        ["first_name", "VARCHAR", "Имя"],
+        ["last_name", "VARCHAR", "Фамилия"],
+        ["patronymic", "VARCHAR", "Отчество"],
+        ["phone", "VARCHAR", "Телефон"],
+        ["date_of_birth", "DATE", "Дата рождения"],
+        ["address", "VARCHAR", "Адрес"]
+      ]},
+      {"type": "heading", "level": 2, "text": "5.3. Таблица Appointment (Запись)"},
+      {"type": "table", "content": [
+        [
+          {"elements": [{"type": "text", "text": "Поле", "bold": true}]},
+          {"elements": [{"type": "text", "text": "Тип", "bold": true}]},
+          {"elements": [{"type": "text", "text": "Описание", "bold": true}]}
+        ],
+        ["id", "INTEGER PK", "Идентификатор записи"],
+        ["doctor_id", "INTEGER FK", "Ссылка на врача"],
+        ["patient_id", "INTEGER FK", "Ссылка на пациента"],
+        ["slot_id", "INTEGER FK", "Ссылка на слот (nullable)"],
+        ["appointment_date", "DATE", "Дата приёма"],
+        ["start_time", "TIME", "Время начала"],
+        ["end_time", "TIME", "Время окончания"],
+        ["status", "ENUM", "booked/cancelled/completed"],
+        ["notes", "TEXT", "Примечания"]
+      ]},
+
+      {"type": "heading", "level": 1, "text": "6. Реализация API"},
+      {"type": "paragraph", "text": "REST API предоставляет следующие эндпоинты:"},
+      {"type": "heading", "level": 2, "text": "6.1. Врачи"},
+      {"type": "table", "content": [
+        [
+          {"elements": [{"type": "text", "text": "Метод", "bold": true}]},
+          {"elements": [{"type": "text", "text": "Путь", "bold": true}]},
+          {"elements": [{"type": "text", "text": "Описание", "bold": true}]}
+        ],
+        ["GET", "/api/doctors/", "Список всех врачей"],
+        ["GET", "/api/doctors/{id}", "Получить врача по ID"],
+        ["POST", "/api/doctors/", "Создать нового врача"],
+        ["PUT", "/api/doctors/{id}", "Обновить данные врача"],
+        ["DELETE", "/api/doctors/{id}", "Удалить врача"],
+        ["GET", "/api/doctors/{id}/slots", "Слоты расписания врача"],
+        ["POST", "/api/doctors/{id}/slots", "Добавить слот расписания"]
+      ]},
+      {"type": "heading", "level": 2, "text": "6.2. Пациенты"},
+      {"type": "table", "content": [
+        [
+          {"elements": [{"type": "text", "text": "Метод", "bold": true}]},
+          {"elements": [{"type": "text", "text": "Путь", "bold": true}]},
+          {"elements": [{"type": "text", "text": "Описание", "bold": true}]}
+        ],
+        ["GET", "/api/patients/", "Список пациентов (поиск по ФИО/телефону)"],
+        ["GET", "/api/patients/{id}", "Получить пациента по ID"],
+        ["POST", "/api/patients/", "Зарегистрировать нового пациента"],
+        ["PUT", "/api/patients/{id}", "Обновить данные пациента"],
+        ["DELETE", "/api/patients/{id}", "Удалить запись пациента"]
+      ]},
+      {"type": "heading", "level": 2, "text": "6.3. Записи на приём"},
+      {"type": "table", "content": [
+        [
+          {"elements": [{"type": "text", "text": "Метод", "bold": true}]},
+          {"elements": [{"type": "text", "text": "Путь", "bold": true}]},
+          {"elements": [{"type": "text", "text": "Описание", "bold": true}]}
+        ],
+        ["GET", "/api/appointments/", "Список записей (фильтры: doctor_id, patient_id, date)"],
+        ["POST", "/api/appointments/", "Создать запись (с проверкой конфликтов)"],
+        ["PUT", "/api/appointments/{id}/cancel", "Отменить запись"],
+        ["PUT", "/api/appointments/{id}/complete", "Завершить запись"],
+        ["DELETE", "/api/appointments/{id}", "Удалить запись"]
+      ]},
+      {"type": "paragraph", "text": "Ключевая особенность — при создании записи выполняется проверка на двойное бронирование. Если врач уже записан на указанную дату и время, сервер возвращает ошибку 409 Conflict."},
+
+      {"type": "heading", "level": 1, "text": "7. Пользовательский интерфейс"},
+      {"type": "paragraph", "text": "Интерфейс приложения реализован с использованием серверного рендеринга (SSR). Все страницы генерируются на стороне сервера с помощью Jinja2-шаблонов. Дизайн построен на кастомных CSS-свойствах с 4px базовой сеткой и медицинской цветовой палитрой (синий — доверие, бирюзовый — медицина, зелёный — доступность)."},
+      {"type": "paragraph", "text": "Основные страницы приложения:"},
+      {"type": "list", "list_type": "numbered", "items": [
+        "Главный экран (дашборд) — статистика по врачам, пациентам и записям на сегодня",
+        "Расписание — недельная сетка расписания врачей с указанием кабинетов и времени приёма",
+        "Врачи — таблица врачей с возможностью добавления через модальное окно",
+        "Пациенты — реестр пациентов с функцией регистрации",
+        "Записи — управление записями на приём с кнопками завершения и отмены",
+        "Админ-панель — общая статистика и управление системой"
+      ]},
+
+      {"type": "heading", "level": 1, "text": "8. Скриншоты приложения"},
+      {"type": "paragraph", "text": "Рисунок 1 — Главный экран (дашборд)"},
+      {"type": "image", "source": "screenshots/dashboard.png", "width": 1200},
+      {"type": "separator"},
+      {"type": "paragraph", "text": "Рисунок 2 — Расписание врачей"},
+      {"type": "image", "source": "screenshots/schedule.png", "width": 1200},
+      {"type": "separator"},
+      {"type": "paragraph", "text": "Рисунок 3 — Управление врачами"},
+      {"type": "image", "source": "screenshots/doctors.png", "width": 1200},
+      {"type": "separator"},
+      {"type": "paragraph", "text": "Рисунок 4 — Реестр пациентов"},
+      {"type": "image", "source": "screenshots/patients.png", "width": 1200},
+      {"type": "separator"},
+      {"type": "paragraph", "text": "Рисунок 5 — Записи на приём"},
+      {"type": "image", "source": "screenshots/appointments.png", "width": 1200},
+      {"type": "separator"},
+      {"type": "paragraph", "text": "Рисунок 6 — Админ-панель"},
+      {"type": "image", "source": "screenshots/admin.png", "width": 1200},
+
+      {"type": "heading", "level": 1, "text": "9. Тестирование"},
+      {"type": "paragraph", "text": "Для проверки корректности API написано 16 автоматических тестов с использованием pytest и pytest-asyncio. Тесты работают с in-memory SQLite базой данных, что обеспечивает изоляцию и скорость выполнения."},
+      {"type": "table", "content": [
+        [
+          {"elements": [{"type": "text", "text": "Файл тестов", "bold": true}]},
+          {"elements": [{"type": "text", "text": "Кол-во", "bold": true}]},
+          {"elements": [{"type": "text", "text": "Что проверяется", "bold": true}]}
+        ],
+        ["test_doctors.py", "6", "CRUD врачей, создание слотов расписания"],
+        ["test_patients.py", "5", "CRUD пациентов, поиск по ФИО"],
+        ["test_appointments.py", "5", "CRUD записей, отмена, завершение, конфликт 409"]
+      ]},
+      {"type": "paragraph", "text": "Результат запуска тестов: все 16 тестов пройдены успешно."},
+      {"type": "code", "text": "tests/test_appointments.py::test_create_appointment      PASSED\ntests/test_appointments.py::test_list_appointments       PASSED\ntests/test_appointments.py::test_cancel_appointment      PASSED\ntests/test_appointments.py::test_complete_appointment    PASSED\ntests/test_appointments.py::test_double_booking_conflict PASSED\ntests/test_doctors.py::test_create_doctor               PASSED\ntests/test_doctors.py::test_list_doctors                PASSED\ntests/test_doctors.py::test_get_doctor_404              PASSED\ntests/test_doctors.py::test_update_doctor              PASSED\ntests/test_doctors.py::test_delete_doctor              PASSED\ntests/test_doctors.py::test_create_doctor_slot         PASSED\ntests/test_patients.py::test_create_patient            PASSED\ntests/test_patients.py::test_list_patients             PASSED\ntests/test_patients.py::test_search_patients           PASSED\ntests/test_patients.py::test_get_patient_404           PASSED\ntests/test_patients.py::test_delete_patient            PASSED\n======================= 16 passed in 0.19s ========================"},
+
+      {"type": "heading", "level": 1, "text": "10. Заключение"},
+      {"type": "paragraph", "text": "В ходе выполнения курсовой работы было разработано веб-приложение для управления муниципальной городской больницей. Реализованы функции управления врачами, пациентами и записями на приём с проверкой конфликтов расписания. Применены современные технологии: FastAPI для бэкенда, SQLAlchemy 2.0 с асинхронной поддержкой для работы с базой данных, Jinja2 для серверного рендеринга."},
+      {"type": "paragraph", "text": "Разработана дизайн-система с использованием медицинской цветовой палитры и 4px базовой сетки. Написаны 16 автоматических тестов, покрывающих основные сценарии использования API. Приложение готово к развёртыванию и может быть расширено добавлением ролей доступа, авторизации и интеграции с внешними системами."},
+
+      {"type": "heading", "level": 1, "text": "Список использованных источников"},
+      {"type": "list", "list_type": "numbered", "items": [
+        "FastAPI Documentation — https://fastapi.tiangolo.com/",
+        "SQLAlchemy 2.0 Documentation — https://docs.sqlalchemy.org/",
+        "Pydantic v2 Documentation — https://docs.pydantic.dev/",
+        "Jinja2 Template Engine — https://jinja.palletsprojects.com/",
+        "Python Official Documentation — https://docs.python.org/3/"
+      ]}
+    ]
+  }
+}

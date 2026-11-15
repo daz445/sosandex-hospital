@@ -32,7 +32,7 @@ Swagger UI (документация API): http://localhost:8000/docs
 
 Учётные данные (задаются в docker-compose):
 
-- логин: `admin@hospital.local`
+- логин: `admin@example.com`
 - пароль: `lab12-admin`
 
 После входа → **Add New Server**:

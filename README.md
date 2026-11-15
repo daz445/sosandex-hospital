@@ -18,6 +18,27 @@ docker compose up --build -d
 Сервис: http://localhost:8000
 Swagger UI (документация API): http://localhost:8000/docs
 
+### Сервисы docker-compose
+
+| Сервис | Образ | Порт | Назначение |
+|---|---|---|---|
+| `app` | сборка из Dockerfile | 8000 | микросервис FastAPI |
+| `db` | postgres:16-alpine | 5432 (внутр.) | реляционная СУБД PostgreSQL |
+| `pgadmin` | dpage/pgadmin4 | **8084** | веб-интерфейс управления СУБД |
+
+### pgAdmin
+
+Веб-интерфейс для работы с базой данных: **http://localhost:8084**
+
+Учётные данные (задаются в docker-compose):
+
+- логин: `admin@hospital.local`
+- пароль: `lab12-admin`
+
+После входа → **Add New Server**:
+
+- вкладка **Connection**: Host = `db`, Port = `5432`, Maintenance database = `hospital`, User = `hospital`, Password = `hospital`.
+
 Остановка:
 
 ```bash

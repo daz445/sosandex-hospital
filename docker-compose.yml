@@ -1,0 +1,35 @@
+services:
+  # ── Реляционная СУБД ──
+  db:
+    image: postgres:16-alpine
+    container_name: hospital-db
+    environment:
+      POSTGRES_USER: hospital
+      POSTGRES_PASSWORD: hospital
+      POSTGRES_DB: hospital
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U hospital -d hospital"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+  # ── Микросервис (multi-stage сборка через Dockerfile) ──
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: hospital-app
+    depends_on:
+      db:
+        condition: service_healthy   # стартуем после готовности СУБД
+    environment:
+      DATABASE_URL: postgresql+asyncpg://hospital:hospital@db:5432/hospital
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+
+volumes:
+  pgdata:

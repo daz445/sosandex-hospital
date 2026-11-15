@@ -1,7 +1,13 @@
+import os
+
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
 from sqlalchemy.orm import DeclarativeBase
 
-DATABASE_URL = "sqlite+aiosqlite:///./hospital.db"
+# URL берётся из окружения (docker-compose задаёт PostgreSQL),
+# по умолчанию — SQLite для локальной разработки и тестов
+DATABASE_URL = os.environ.get(
+    "DATABASE_URL", "sqlite+aiosqlite:///./hospital.db"
+)
 
 engine = create_async_engine(DATABASE_URL, echo=False)
 async_session = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
